@@ -6,13 +6,14 @@
   "author": "@edlugora",
   "license": "MIT",
   "dependencies": {
+    "apollo-datasource": "^0.7.2",
     "apollo-datasource-rest": "^0.9.3",
     "apollo-server": "^2.16.1",
     "dotenv": "^8.2.0",
     "graphql": "^15.3.0"
   },
   "scripts": {
-    "start": "nodemon index.js"
+    "dev": "nodemon -e js,graphql index"
   },
   "devDependencies": {
     "nodemon": "^2.0.4"
