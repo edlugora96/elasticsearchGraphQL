@@ -1,21 +1,38 @@
-const { RESTDataSource } = require("apollo-datasource-rest")
-
-class ElasticAPI extends RESTDataSource {
-  constructor({ index }) {
-    super()
-    this.DB_index = index
-    this.baseURL = process.env.DB_HOST
+const { Client } = require("@elastic/elasticsearch")
+class ElasticAPI extends Client {
+  constructor() {
+    super({ node: process.env.DB_HOST })
   }
-  async getAllDocuments() {
-    try {
-      const response = await this.get(`${this.DB_index}/_search`)
-      console.log(response)
-      return Array.isArray(response)
-        ? response.map(launch => this.launchReducer(launch))
-        : []
-    } catch (error) {
-      console.log(error)
-    }
+  async searchByQuery(index, query) {
+    const { body } = await this.search({
+      index,
+      body: {
+        query: {
+          query_string: { query: `*${query}*` },
+        },
+      },
+    })
+    return body
+  }
+  async searchHighlight({ index, query }) {
+    const { body } = await this.search({
+      index: index || "*",
+      body: {
+        query: {
+          query_string: { query: `*${query}*` },
+        },
+        highlight: {
+          require_field_match: false,
+          fields: {
+            "*": {
+              pre_tags: ["<em>"],
+              post_tags: ["</em>"],
+            },
+          },
+        },
+      },
+    })
+    return body
   }
 }
 

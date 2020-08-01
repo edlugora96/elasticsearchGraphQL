@@ -1,8 +1,110 @@
-type Book {
-  title: String
-  author: String
+union GlobalSearch = User | Project | Gadget
+
+type User {
+  ID: ID
+  name: String
+  email: String
+  password: String
+  gadgets: [Gadget]
+  projects: [Project]
+  birthday: String
+  publicKey: String
+  privateKey: String
+  result: String
+  creation: TimeControl!
+  lastUpdate: TimeControl
+  socialId: [String]
+  labels: [String]
 }
+type TimeControl {
+  user: User
+  date: String
+}
+
+type Collaborator {
+  user: User
+  scope: String
+}
+
+type Project {
+  ID: ID
+  name: String
+  description: String
+  gadgets: [Gadget]
+  owner: User
+  collaborators: [Collaborator]
+  creation: TimeControl
+  lastUpdate: TimeControl
+  labels: [String]
+}
+
+"Is the modules (arduino/rasberrypi/...) has been connection to the server"
+type Gadget {
+  ID: ID
+  name: String
+  description: String
+  project: Project
+  owner: User
+  publicKey: String
+  project: Project
+  value: String
+  active: Boolean
+  creation: TimeControl
+  lastUpdate: TimeControl
+  collaborators: [Collaborator]
+  labels: [String]
+}
+
+type HighlightingSearch {
+  body: [GlobalSearch]
+  highlight: [[String]]
+}
+
+input userInput {
+  name: String!
+  email: String!
+  password: String!
+  birthday: String!
+  publicKey: String!
+  privateKey: String!
+  result: String
+  creation: TimeControl!
+  lastUpdate: TimeControl
+  labels: [String]
+}
+input projectInput {
+  name: String!
+  description: String!
+  gadgets: [Gadget]
+  owner: User!
+  collaborators: [Collaborator]
+  creation: TimeControl!
+  lastUpdate: TimeControl
+  labels: [String]
+}
+input gadgetInput {
+  name: String!
+  description: String!
+  project: Project
+  owner: User!
+  publicKey: String
+  collaborators: [Collaborator]
+  value: String
+  active: Boolean
+  creation: TimeControl!
+  lastUpdate: TimeControl
+  labels: [String]
+}
+
+type Mutation {
+  createUser(index: String!, body: userInput): User!
+  createProject(index: String!, body: projectInput): Project!
+  createGadget(index: String!, body: gadgetInput): Gadget!
+  update(index: String!, id: String!, body: userInput): User!
+}
+
 type Query {
-  books: [Book]
-  users: String
+  users: HighlightingSearch
+  searchHighlight(index: String, query: String!): HighlightingSearch
+  search(index: String, query: String!): [GlobalSearch]
 }
