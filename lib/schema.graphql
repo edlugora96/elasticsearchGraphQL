@@ -27,6 +27,8 @@ type Project {
   creation: TimeControl
   lastUpdate: TimeControl
   labels: [String]
+  publicKey: String
+  privateKey: String
 }
 "Is the modules (arduino/rasberrypi/...) has been connection to the server"
 type Gadget {
@@ -34,7 +36,6 @@ type Gadget {
   name: String
   description: String
   owner: User
-  publicKey: String
   project: Project
   value: String
   active: Boolean
@@ -42,13 +43,17 @@ type Gadget {
   lastUpdate: TimeControl
   collaborators: [Collaborator]
   labels: [String]
+  publicKey: String
+  privateKey: String
 }
-
+type Responses {
+  ID: ID
+  result: String
+}
 type TimeControl {
   user: User
   date: String
 }
-
 type Collaborator {
   user: User
   scope: String
@@ -58,15 +63,31 @@ type HighlightingSearch {
   highlight: [[String]]
 }
 
+input timeControlInput {
+  user: ID
+  date: String
+}
+
 input userInput {
   name: String!
   email: String!
   password: String!
   birthday: String!
-  publicKey: String!
-  privateKey: String!
-  result: String
   labels: [String]
+  gadgets: [ID]
+  projects: [ID]
+  lastUpdate: timeControlInput
+  socialId: [String]
+}
+
+input updateUserInput {
+  name: String
+  email: String
+  password: String
+  birthday: String
+  labels: [String]
+  lastUpdate: timeControlInput
+  socialId: [String]
 }
 input projectInput {
   name: String!
@@ -76,12 +97,25 @@ input projectInput {
   collaborators: [ID]
   labels: [String]
 }
+input updateProjectInput {
+  name: String
+  description: String
+  collaborators: [ID]
+  labels: [String]
+}
 input gadgetInput {
   name: String!
   description: String!
-  project: ID
+  project: ID!
   owner: ID!
-  publicKey: String
+  collaborators: [ID]
+  value: String
+  active: Boolean
+  labels: [String]
+}
+input updateGadgetInput {
+  name: String
+  description: String
   collaborators: [ID]
   value: String
   active: Boolean
@@ -92,7 +126,12 @@ type Mutation {
   createUser(body: userInput): User!
   createProject(body: projectInput): Project!
   createGadget(body: gadgetInput): Gadget!
-  update(index: String!, id: String!, body: userInput): User!
+  updateUser(id: String!, body: updateUserInput): Responses!
+  updateProject(id: String!, body: updateProjectInput): Responses!
+  updateGadget(id: String!, body: updateGadgetInput): Responses!
+  deleteUser(id: String!): Responses!
+  deleteProject(id: String!): Responses!
+  deleteGadget(id: String!): Responses!
 }
 
 type Query {
