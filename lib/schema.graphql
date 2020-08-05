@@ -107,7 +107,6 @@ input gadgetInput {
   name: String!
   description: String!
   project: ID!
-  owner: ID!
   collaborators: [ID]
   value: String
   active: Boolean
