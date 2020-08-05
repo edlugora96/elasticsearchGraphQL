@@ -1,22 +1,33 @@
+directive @auth(requires: [Role]) on OBJECT | FIELD_DEFINITION
+
+enum Role {
+  ADMIN
+  REVIEWER
+  USER
+  UNKNOWN
+}
+
 union GlobalSearch = User | Project | Gadget
 
 type User {
   ID: ID
   name: String
   email: String
-  password: String
+  password: String @auth(requires: ADMIN)
+  role: String
+  scope: [String]
   gadgets: [Gadget]
   projects: [Project]
   birthday: String
-  publicKey: String
-  privateKey: String
+  publicKey: String @auth(requires: ADMIN)
+  privateKey: String @auth(requires: ADMIN)
   result: String
   creation: TimeControl!
   lastUpdate: TimeControl
   socialId: [String]
   labels: [String]
 }
-type Project {
+type Project @auth(requires: [ADMIN, USER]) {
   ID: ID
   name: String
   description: String
@@ -27,11 +38,11 @@ type Project {
   creation: TimeControl
   lastUpdate: TimeControl
   labels: [String]
-  publicKey: String
-  privateKey: String
+  publicKey: String @auth(requires: ADMIN)
+  privateKey: String @auth(requires: ADMIN)
 }
 "Is the modules (arduino/rasberrypi/...) has been connection to the server"
-type Gadget {
+type Gadget @auth(requires: [ADMIN, USER]) {
   ID: ID
   name: String
   description: String
@@ -43,9 +54,20 @@ type Gadget {
   lastUpdate: TimeControl
   collaborators: [Collaborator]
   labels: [String]
-  publicKey: String
-  privateKey: String
+  publicKey: String @auth(requires: ADMIN)
+  privateKey: String @auth(requires: ADMIN)
 }
+
+type Login {
+  idSocial: String
+  token: String
+}
+
+input loginInput {
+  username: String!
+  password: String!
+}
+
 type Responses {
   ID: ID
   result: String
@@ -71,6 +93,7 @@ input timeControlInput {
 input userInput {
   name: String!
   email: String!
+  role: String!
   password: String!
   birthday: String!
   labels: [String]
@@ -92,10 +115,11 @@ input updateUserInput {
 input projectInput {
   name: String!
   description: String!
-  gadgets: [ID]
-  owner: ID!
-  collaborators: [ID]
   labels: [String]
+}
+input roleInput {
+  role: String!
+  user: ID!
 }
 input updateProjectInput {
   name: String
@@ -123,18 +147,24 @@ input updateGadgetInput {
 
 type Mutation {
   createUser(body: userInput): User!
-  createProject(body: projectInput): Project!
-  createGadget(body: gadgetInput): Gadget!
+  createProject(body: projectInput): Project! @auth(requires: [ADMIN, USER])
+  createGadget(body: gadgetInput): Gadget! @auth(requires: [ADMIN, USER])
   updateUser(id: String!, body: updateUserInput): Responses!
+    @auth(requires: [ADMIN, USER])
   updateProject(id: String!, body: updateProjectInput): Responses!
+    @auth(requires: [ADMIN, USER])
   updateGadget(id: String!, body: updateGadgetInput): Responses!
-  deleteUser(id: String!): Responses!
-  deleteProject(id: String!): Responses!
-  deleteGadget(id: String!): Responses!
+    @auth(requires: [ADMIN, USER])
+  deleteUser(id: String!): Responses! @auth(requires: [ADMIN, USER])
+  deleteProject(id: String!): Responses! @auth(requires: [ADMIN, USER])
+  deleteGadget(id: String!): Responses! @auth(requires: [ADMIN, USER])
+  setRole(body: roleInput): Responses
+  setScope: Responses
 }
 
 type Query {
   users: HighlightingSearch
   searchHighlight(index: String, query: String!): HighlightingSearch
   search(index: String, query: String!): [GlobalSearch]
+  login(query: loginInput): Login
 }

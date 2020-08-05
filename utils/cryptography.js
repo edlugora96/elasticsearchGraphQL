@@ -43,7 +43,13 @@ const hashPassword = password => {
     })
   })
 }
+
+const comparePasswords = async storePassword => async password => {
+  return await bcrypt.compare(password, storePassword)
+}
+
 module.exports = {
   generateKeys,
   hashPassword,
+  comparePasswords,
 }
