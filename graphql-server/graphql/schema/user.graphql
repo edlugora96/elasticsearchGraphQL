@@ -1,0 +1,42 @@
+type User {
+  ID: ID
+  name: String
+  email: String
+  password: String @auth(requires: ADMIN)
+  role: String
+  scope: [String]
+  gadgets: [Gadget]
+  projects: [Project]
+  birthday: String
+  publicKey: String @auth(requires: ADMIN)
+  privateKey: String @auth(requires: ADMIN)
+  result: String
+  creation: TimeControl!
+  lastUpdate: TimeControl
+  socialId: [String]
+  labels: [String]
+}
+
+input userInput {
+  name: String!
+  email: String!
+  role: String!
+  password: String!
+  birthday: String!
+  labels: [String]
+  gadgets: [ID]
+  projects: [ID]
+  lastUpdate: timeControlInput
+  socialId: [String]
+}
+
+input updateUserInput {
+  name: String
+  email: String
+  password: String
+  birthday: String
+  labels: [String]
+  lastUpdate: timeControlInput
+  socialId: [String]
+}
+

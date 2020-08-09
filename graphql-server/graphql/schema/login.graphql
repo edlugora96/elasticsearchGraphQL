@@ -1,0 +1,9 @@
+type Login {
+  idSocial: String
+  token: String
+}
+
+input loginInput {
+  username: String!
+  password: String!
+}

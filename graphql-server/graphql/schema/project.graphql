@@ -1,0 +1,28 @@
+type Project @auth(requires: [ADMIN, USER]) {
+  ID: ID
+  name: String
+  description: String
+  gadgets: [Gadget]
+  owner: User
+  active: Boolean
+  collaborators: [Collaborator]
+  creation: TimeControl
+  lastUpdate: TimeControl
+  labels: [String]
+  publicKey: String @auth(requires: ADMIN)
+  privateKey: String @auth(requires: ADMIN)
+}
+
+input projectInput {
+  name: String!
+  description: String!
+  labels: [String]
+}
+
+input updateProjectInput {
+  name: String
+  description: String
+  collaborators: [ID]
+  labels: [String]
+}
+

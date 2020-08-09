@@ -1,30 +1,8 @@
 require("dotenv").config()
-const { ApolloServer } = require("apollo-server")
+require("./graphql-server")
+require("./mqtt-server")
 
-const {
-  resolvers,
-  typeDefs,
-  dataSources,
-  schemaDirectives,
-  context,
-  subscriptions,
-} = require("./lib")
+const FakeAgent = require("./services/mqtt-agent")
+const fakeSensor = new FakeAgent()
 
-require("./mqttServer")
-
-const { MqttAgent } = require("./services")
-const agent = new MqttAgent()
-agent.permanentSensor()
-
-const server = new ApolloServer({
-  typeDefs,
-  resolvers,
-  dataSources,
-  context,
-  schemaDirectives,
-  subscriptions,
-})
-
-server.listen().then(({ url }) => {
-  console.log(`🚀  Server ready at ${url}`)
-})
+fakeSensor.activate(200)

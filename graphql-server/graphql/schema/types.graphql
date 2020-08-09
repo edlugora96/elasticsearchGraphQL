@@ -1,0 +1,27 @@
+input roleInput {
+  role: String!
+  user: ID!
+}
+
+type Responses {
+  ID: ID
+  result: String
+}
+type TimeControl {
+  user: User
+  date: String
+}
+type Collaborator {
+  user: User
+  scope: String
+}
+type HighlightingSearch {
+  body: [GlobalSearch]
+  highlight: [[String]]
+}
+
+input timeControlInput {
+  user: ID
+  date: String
+}
+

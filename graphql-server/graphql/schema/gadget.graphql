@@ -1,0 +1,35 @@
+"Is the modules (arduino/rasberrypi/...) has been connection to the server"
+type Gadget @auth(requires: [ADMIN, USER]) {
+  ID: ID
+  name: String
+  description: String
+  owner: User
+  project: Project
+  value: String
+  active: Boolean
+  creation: TimeControl
+  lastUpdate: TimeControl
+  collaborators: [Collaborator]
+  labels: [String]
+  publicKey: String @auth(requires: ADMIN)
+  privateKey: String @auth(requires: ADMIN)
+}
+
+input gadgetInput {
+  name: String!
+  description: String!
+  project: ID!
+  collaborators: [ID]
+  value: String
+  active: Boolean
+  labels: [String]
+}
+
+input updateGadgetInput {
+  name: String
+  description: String
+  collaborators: [ID]
+  value: String
+  active: Boolean
+  labels: [String]
+}

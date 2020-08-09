@@ -1,4 +1,4 @@
-const { verifyToken } = require("../utils")
+const { verifyToken } = require("../../../utils")
 module.exports = async ({ req, connection }) => {
   let authToken = null
   let currentUser = null

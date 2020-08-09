@@ -1,0 +1,6 @@
+type Query {
+  users: HighlightingSearch
+  searchHighlight(index: String, query: String!): HighlightingSearch
+  search(index: String, query: String!): [GlobalSearch]
+  login(query: loginInput): Login
+}

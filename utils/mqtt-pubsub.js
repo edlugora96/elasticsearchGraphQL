@@ -1,7 +1,7 @@
 const { MQTTPubSub } = require("graphql-mqtt-subscriptions")
 const { connect } = require("mqtt")
 
-const client = connect("mqtt://127.94.0.2", {
+const client = connect(process.env.MQTT_SERVER, {
   reconnectPeriod: 1000,
 })
 
