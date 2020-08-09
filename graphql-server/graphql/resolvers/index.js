@@ -16,9 +16,10 @@ const resolvers = {
     deleteGadget: require("./mutations/deleteGadget.resolver"),
     deleteProject: require("./mutations/deleteProject.resolver"),
     deleteUser: require("./mutations/deleteUser.resolver"),
+    sendToAgent: require("./mutations/sendToAgent.resolver"),
   },
   Subscription: {
-    listenSensor: require("./subscription/listenSensor.resolver"),
+    listenAgent: require("./subscription/listenAgent.resolver"),
   },
   User: {
     gadgets: require("./types/gadgets.type"),

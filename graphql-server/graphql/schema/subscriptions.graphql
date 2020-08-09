@@ -1,4 +1,13 @@
-type Subscription {
-  listenSensor(query: String): String
+input agentPubsubInput {
+  topic: String!
+  agent: String!
 }
 
+input agentInput {
+  topic: String!
+  payload: String!
+}
+
+type Subscription {
+  listenAgent(query: agentPubsubInput): String
+}

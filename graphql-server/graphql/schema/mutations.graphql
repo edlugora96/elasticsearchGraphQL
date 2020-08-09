@@ -2,13 +2,14 @@ type Mutation {
   createUser(body: userInput): User!
   createProject(body: projectInput): Project! @auth(requires: [ADMIN, USER])
   createGadget(body: gadgetInput): Gadget! @auth(requires: [ADMIN, USER])
-  updateUser(id: String!, body: updateUserInput): Responses! @auth(requires: [ADMIN, USER])
-  updateProject(id: String!, body: updateProjectInput): Responses! @auth(requires: [ADMIN, USER])
-  updateGadget(id: String!, body: updateGadgetInput): Responses! @auth(requires: [ADMIN, USER])
+  updateUser(id: String!, body: updateUserInput): Responses!
+    @auth(requires: [ADMIN, USER])
+  updateProject(id: String!, body: updateProjectInput): Responses!
+    @auth(requires: [ADMIN, USER])
+  updateGadget(id: String!, body: updateGadgetInput): Responses!
+    @auth(requires: [ADMIN, USER])
   deleteUser(id: String!): Responses! @auth(requires: [ADMIN, USER])
   deleteProject(id: String!): Responses! @auth(requires: [ADMIN, USER])
   deleteGadget(id: String!): Responses! @auth(requires: [ADMIN, USER])
-  setRole(body: roleInput): Responses
-  setScope: Responses
+  sendToAgent(body: agentInput): String
 }
-
