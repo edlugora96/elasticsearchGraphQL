@@ -1,3 +1,6 @@
+const { nanoid } = require("nanoid")
+const { setCreation, setPairKeys } = require("../../../../utils")
+
 module.exports = async (_, { body }, { dataSources, currentUser }, ____) => {
   const index = "projects"
   let response = {}

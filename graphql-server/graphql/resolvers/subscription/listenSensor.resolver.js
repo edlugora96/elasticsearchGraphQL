@@ -1,15 +1,15 @@
 const { withFilter } = require("apollo-server")
 const { pubsub } = require("../../../../utils")
 
-const DRONE_MOVED = "DRONE_MOVED"
+const DATA_SENSOR = "DATA_SENSOR"
 module.exports = {
   subscribe: withFilter(
-    () => pubsub.asyncIterator(DRONE_MOVED),
-    ({ locationChanged }, { query }) => {
-      return locationChanged.droneId === query
+    () => pubsub.asyncIterator(DATA_SENSOR),
+    ({ sensorId }, { query }) => {
+      return sensorId === query
     }
   ),
   resolve: data => {
-    return data.locationChanged.droneId
+    return data.value
   },
 }

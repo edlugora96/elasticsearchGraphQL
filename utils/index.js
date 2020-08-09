@@ -1,6 +1,7 @@
 const cryptography = require("./cryptography")
 const queries = require("./queries")
 const jwt = require("./jwt")
+const helpers = require("./helpers")
 const mqtt = require("./mqtt-pubsub")
 
 module.exports = {
@@ -8,4 +9,5 @@ module.exports = {
   ...queries,
   ...jwt,
   ...mqtt,
+  ...helpers,
 }

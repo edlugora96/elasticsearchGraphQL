@@ -1,3 +1,4 @@
+const { queryMatch, queryDeleteById } = require("../../../../utils")
 module.exports = async (_, { id }, { dataSources }, ____) => {
   const index = "users"
   let response = {}
