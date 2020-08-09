@@ -5,6 +5,7 @@ const resolvers = {
     searchHighlight: require("./queries/searchHighlight.resolver"),
     login: require("./queries/login.resolver"),
     search: require("./queries/search.resolver"),
+    sendToAgent: require("./queries/sendToAgent.resolver"),
   },
   Mutation: {
     createGadget: require("./mutations/createGadget.resolver"),
@@ -16,7 +17,6 @@ const resolvers = {
     deleteGadget: require("./mutations/deleteGadget.resolver"),
     deleteProject: require("./mutations/deleteProject.resolver"),
     deleteUser: require("./mutations/deleteUser.resolver"),
-    sendToAgent: require("./mutations/sendToAgent.resolver"),
   },
   Subscription: {
     listenAgent: require("./subscription/listenAgent.resolver"),

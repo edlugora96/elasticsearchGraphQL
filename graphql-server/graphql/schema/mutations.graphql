@@ -11,5 +11,4 @@ type Mutation {
   deleteUser(id: String!): Responses! @auth(requires: [ADMIN, USER])
   deleteProject(id: String!): Responses! @auth(requires: [ADMIN, USER])
   deleteGadget(id: String!): Responses! @auth(requires: [ADMIN, USER])
-  sendToAgent(body: agentInput): String
 }
