@@ -1,47 +1,101 @@
-const { Board, Led } = require("johnny-five")
+const {
+  Board,
+  Led,
+  Button,
+  Servo,
+  Thermometer,
+  Sensor,
+} = require("johnny-five")
 const board = new Board()
 const Agent = require("../services/mqtt-agent")
 
-const gadgetAgent = new Agent({ mqtt: { topic: "led" } })
+const { encryptedData } = require("../utils")
 
-let blink = true
+const arduinoAgent = new Agent({
+  mqtt: { topic: "arduino" },
+  clientId: process.env.ID_ARDUINO_MQTT,
+})
+const key = process.env.SENT_TO_PROJECT_KEY.split("\\n").join("\n")
 
 board.on("ready", () => {
-  const led = new Led(13)
+  const led = new Led(11)
+  const mic = new Sensor("A0")
+  button = new Button(2)
+  const servo = new Servo(6)
+  const thermometer = new Thermometer({
+    controller: "LM35",
+    pin: "A1",
+  })
 
   board.repl.inject({
     led,
+    button,
+    servo,
   })
-
-  led.blink(1000)
-
-  const led11 = new Led(11)
-
-  led11.fade({
-    easing: "linear",
-    duration: 1000,
-    cuePoints: [0, 0.2, 0.4, 0.6, 0.8, 1],
-    keyFrames: [0, 250, 25, 150, 100, 125],
-    onstop() {
-      console.log("Animation stopped")
-    },
-  })
-
-  gadgetAgent.hear((_, payload) => {
-    switch (payload.toString().replace(/"/gim, "")) {
-      case "on":
-        led11.fadeIn()
-        break
-      case "off":
-        led11.fadeOut()
-        break
-      case "blink":
-        board.loop(2000, () => {
-          blink ? led11.fadeOut() : led11.fadeIn()
-          blink = !blink
-        })
-        break
+  arduinoAgent.hear((_, payload) => {
+    if ("value" in payload) {
+      servo.to(payload.value)
     }
   })
-  // Toggle the led11 after 2 seconds (shown in ms)
+
+  setInterval(() => {
+    const { celsius, fahrenheit, kelvin } = thermometer
+    arduinoAgent.say(
+      JSON.stringify({
+        agentId: "thermometer",
+        data: encryptedData(
+          String({
+            celsius,
+            fahrenheit,
+            kelvin,
+          }),
+          key
+        ),
+      })
+    )
+  }, 1000)
+
+  mic.on("data", function () {
+    arduinoAgent.say(
+      JSON.stringify({
+        agentId: "mic",
+        data: encryptedData(String(this.value), key),
+      })
+    )
+    led.brightness(this.value >> 2)
+  })
+
+  // mic.on("change", () => {
+  //   console.log("====================================")
+  //   console.log(mic.value, mic.value >> 2)
+  //   console.log("====================================")
+  // })
+
+  button.on("down", function () {
+    arduinoAgent.say(
+      JSON.stringify({
+        agentId: "button",
+        data: encryptedData("down", key),
+      })
+    )
+  })
+
+  button.on("hold", function () {
+    console.log("hold")
+    arduinoAgent.say(
+      JSON.stringify({
+        agentId: "button",
+        data: encryptedData("hold", key),
+      })
+    )
+  })
+
+  button.on("up", function () {
+    arduinoAgent.say(
+      JSON.stringify({
+        agentId: "button",
+        data: encryptedData("up", key),
+      })
+    )
+  })
 })

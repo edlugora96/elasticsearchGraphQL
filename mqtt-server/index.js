@@ -1,4 +1,4 @@
-const mosca = require("mosca")
+/* const mosca = require("mosca")
 
 const server = new mosca.Server({
   port: 1883,
@@ -8,16 +8,24 @@ server.on("ready", function () {
   console.log("Broker is ready")
 })
 
-/* 
-server.on("published", ({ topic }) => {
-  console.log("topic: " + topic)
+server.on("clientConnected", async some => {
+}) */
+
+const aedes = require("aedes")()
+const server = require("net").createServer(aedes.handle)
+const port = 1883
+const DB = require("../DB")
+const dbApi = new DB()
+
+server.listen(port, function () {
+  console.log("server started and listening on port ", port)
 })
 
-server.on("subscribed", (some, client) => {
-  console.log(some, client.id)
+aedes.on("client", async client => {
+  const {
+    hits: { hits },
+  } = await dbApi.searchByID({ query: client.id })
+  if (hits.length === 0) {
+    client.close()
+  }
 })
-
-server.on("clientConnected", some => {
-  console.log("Client connected: " + some.id)
-})
- */

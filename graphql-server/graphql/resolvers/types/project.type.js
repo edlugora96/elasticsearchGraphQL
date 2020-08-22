@@ -1,5 +1,5 @@
 const { queryById, queryMatch, outParser } = require("../../../../utils")
-module.exports = async ({ ID, ...rest }, __, { dataSources }) => {
+module.exports = async ({ ID }, __, { dataSources }) => {
   const payload = await dataSources.dbsAPI.search({
     index: "projects_gadgets",
     body: queryMatch("gadgetID", ID),

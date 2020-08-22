@@ -11,7 +11,7 @@ module.exports = async ({ req, connection }) => {
       currentUser = await verifyToken(authToken)
     }
   } catch {
-    console.warn(`Unable to authenticate`)
+    throw new Error("Unable to authenticate")
   }
 
   return {

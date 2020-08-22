@@ -8,6 +8,7 @@
   "dependencies": {
     "@elastic/elasticsearch": "^7.8.0",
     "@serialport/bindings": "^9.0.1",
+    "aedes": "^0.42.5",
     "apollo-server": "^2.16.1",
     "bcrypt": "^5.0.0",
     "crypto-random-string": "^3.2.0",
@@ -20,7 +21,8 @@
     "moment": "^2.27.0",
     "mosca": "^2.8.3",
     "mqtt": "^4.1.0",
-    "nanoid": "^3.1.12"
+    "nanoid": "^3.1.12",
+    "net": "^1.0.2"
   },
   "scripts": {
     "dev": "nodemon -e js,graphql index"

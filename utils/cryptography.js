@@ -1,4 +1,4 @@
-const { generateKeyPair } = require("crypto")
+const { generateKeyPair, publicEncrypt, constants } = require("crypto")
 const bcrypt = require("bcrypt")
 const cryptoRandomString = require("crypto-random-string")
 const generateKeys = async () => {
@@ -48,7 +48,18 @@ const comparePasswords = async storePassword => async password => {
   return await bcrypt.compare(password, storePassword)
 }
 
+const encryptedData = (message, publicKey) =>
+  publicEncrypt(
+    {
+      key: publicKey,
+      padding: constants.RSA_PKCS1_OAEP_PADDING,
+      oaepHash: "sha256",
+    },
+    Buffer.from(message)
+  ).toString("base64")
+
 module.exports = {
+  encryptedData,
   generateKeys,
   hashPassword,
   comparePasswords,

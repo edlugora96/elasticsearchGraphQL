@@ -3,9 +3,13 @@ input agentPubsubInput {
   agent: String!
 }
 
+input Payload {
+  value: String
+}
+
 input agentInput {
   topic: String!
-  payload: String!
+  payload: Payload!
 }
 
 type Subscription {

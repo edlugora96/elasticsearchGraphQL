@@ -12,6 +12,9 @@ class ElasticAPI extends Client {
         },
       },
     })
+    console.log("====================================")
+    console.log({ index, query, body })
+    console.log("====================================")
     return body
   }
   async searchByEmail(index, email) {
@@ -63,12 +66,26 @@ class ElasticAPI extends Client {
         },
         highlight: {
           require_field_match: false,
-          fields: {
-            "*": {
-              pre_tags: ["<em>"],
-              post_tags: ["</em>"],
+          fields: [
+            {
+              name: { pre_tags: ["<em>"], post_tags: ["</em>"] },
             },
-          },
+            {
+              description: { pre_tags: ["<em>"], post_tags: ["</em>"] },
+            },
+            {
+              value: { pre_tags: ["<em>"], post_tags: ["</em>"] },
+            },
+            {
+              labels: { pre_tags: ["<em>"], post_tags: ["</em>"] },
+            },
+            {
+              birthday: { pre_tags: ["<em>"], post_tags: ["</em>"] },
+            },
+            {
+              result: { pre_tags: ["<em>"], post_tags: ["</em>"] },
+            },
+          ],
         },
       },
     })
